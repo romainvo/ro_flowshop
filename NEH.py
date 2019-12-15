@@ -38,7 +38,7 @@ def MethodeNEH(Flowshop):
         for j in range(0,i+1):
             OrdoTest = CopyJobs(OrdoFinal)
             if j == 0:
-                """initialisation du premier test qui est au début considéré comme le minimum des tests"""
+                """initialisation du premier test qui est au début posé comme le minimum des tests pour cette étape"""
                 OrdoTestmin.insert(j, ListeJob[i])
                 Test=ordonnancement.Ordonnancement(NbMachine)
                 Test.ordonnancer_liste_job(OrdoTestmin)
