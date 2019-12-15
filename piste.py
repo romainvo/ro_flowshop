@@ -102,7 +102,7 @@ class Piste() :
 if __name__ == "__main__":
     
     flowshop = Flowshop()
-    flowshop.definir_par("jeu_donnees_1/tai01.txt")
+    flowshop.definir_par("jeu_donnees_2/tai52.txt")
     print("nb machine = ", flowshop.nb_machines)
     print("nb job = " , flowshop.nb_jobs)
 
