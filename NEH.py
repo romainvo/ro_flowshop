@@ -3,7 +3,7 @@ def OrdonnerListe(ListeJob):
     ListeNEH=[ListeJob[0]];
     for J in ListeJob:
         i=0;
-        while(J.duree()>ListeNEH[i].duree()) :
+        while(J.duree()<ListeNEH[i].duree()) :
             i=i+1
         ListeNEH.insert(i,J)
     return ListeNEH
