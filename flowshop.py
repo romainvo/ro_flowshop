@@ -20,7 +20,7 @@ class Flowshop():
         self.l_job = l_job
 
     def nombre_jobs(self):
-        return self.nombre_jobs
+        return self.nb_jobs
 
     def nombre_machines(self):
         return self.nb_machines
