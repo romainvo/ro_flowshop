@@ -37,7 +37,7 @@ class Flowshop():
         l = ligne.split() # on récupère les valeurs dans une liste
         self.nb_jobs = int(l[0])
         self.nb_machines = int(l[1])
-       
+
         self.l_job = []
         for i in range(self.nb_jobs):
             ligne = fdonnees.readline() 
