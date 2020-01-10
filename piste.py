@@ -27,7 +27,7 @@ class Piste() :
 
         self.nombreFourmi = self.NOMBRE_FOURMI
         for i in range(0,self.nombreFourmi):
-            self.listeFourmis.append(fourmi.Fourmi(self.fs,self)
+            self.listeFourmis.append(fourmi.Fourmi(self.fs,self))
 
     #------------------------------------------------------------
     # Methods                                                   ||
