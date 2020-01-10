@@ -52,7 +52,7 @@ class Flowshop():
 
 if __name__ == "__main__":
     prob = Flowshop()
-    prob.definir_par("jeu1.txt")
+    prob.definir_par("tai01.txt")
     print("nb machine = ",prob.nombre_machines())
     print("nb job = " ,prob.nombre_jobs())
     NEH.MethodeNEH(prob)
