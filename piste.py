@@ -15,7 +15,7 @@ class Piste() :
 
     def __init__(self,flowshop):
 
-        self.fs = flowshop;
+        self.fs = flowshop
         self.pheromoneSurArc = [[]]
         self.bestLongueur = -1
         self.solutionTemp = []
@@ -54,30 +54,30 @@ class Piste() :
     def majPheromone(self):
         for i in range(0,self.fs.nombre_jobs()):
             for j in range(0,i):
-                self.getPheromoneSurArc()[i][j]=self.P * self.getPheromoneSurArc()[i][j];
+                self.getPheromoneSurArc()[i][j]=self.P * self.getPheromoneSurArc()[i][j]
                 for four in self.getFourmis():
                     if not four.getElitiste():
                         self.getPheromoneSurArc()[i][j] += four.getPassage()[i][j]*(self.Q / four.getCmax())
                 else:
                     self.getPheromoneSurArc()[i][j]+= four.getPassage()[i][j] * self.COEF_ELITISTE * (self.Q / four.getCmax())
-                self.getPheromoneSurArc()[j][i] = self.getPheromoneSurArc()[i][j];
+                self.getPheromoneSurArc()[j][i] = self.getPheromoneSurArc()[i][j]
 
     def majBestSolution(self):
-        best = self.getFourmi(0).getCmax();
-        bestF = self.getFourmi(0);
+        best = self.getFourmi(0).getCmax()
+        bestF = self.getFourmi(0)
         for four in self.getFourmis():
             if four.getCmax() < best:
-                best = four.getCmax();
-                bestF = four;
+                best = four.getCmax()
+                bestF = four
         if self.getBestCmax() < 0:
-            self.bestCmax=best;
-            self.solutionTemp=bestF.getJobsVisitees();
+            self.bestCmax=best
+            self.solutionTemp=bestF.getJobsVisitees()
         elif self.getBestCmax() > best:
-            self.bestLongueur=best;
-            self.solutionTemp=bestF.getJobsVisitees();
+            self.bestLongueur=best
+            self.solutionTemp=bestF.getJobsVisitees()
 
     def resetFourmis(self):
-        self.listeFourmis.clear();
-        self.listeFourmis = [];
+        self.listeFourmis.clear()
+        self.listeFourmis = []
         for i in range(0,self.getFlowshop().nombre_jobs()):
-            self.listeFourmis.add(fourmi.Fourmi(self.getFlowshop(), self));
+            self.listeFourmis.add(fourmi.Fourmi(self.getFlowshop(), self))

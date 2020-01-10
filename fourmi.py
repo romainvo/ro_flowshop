@@ -32,13 +32,21 @@ pherotrajet = np.zeros((N,N))  #initialement il n'y a pas de pheromones à dépo
 probadevisite = [1 for i in range(N)]  #initialement chaque job a une proba de 1 de visite pour chaque fourmi"""
 
 class Fourmi():
-    def __init__(self,jobsNonVisites,jobsVisites,m_flowshop,cmax,passageSurArc,piste):
-        self.jobsNonVisites = jobsNonVisites
-        self.jobsVisites = jobsVisites
-        self.m_flowshop = m_flowshop
-        self.cmax = cmax
-        self.passageSurArc = passageSurArc
+
+
+    def __init__(self,m_flowshop,piste):
+        N=m_flowshop.nombre_jobs()
         self.piste = piste
+        self.m_flowshop = m_flowshop
+        self.jobsNonVisites = []
+        for i in range(0,N):
+            self.jobsNonVisites.append(i)
+        self.jobsVisites = []
+        self.passageSurArc = [[0 for i in range(0,N)] for j in range(0,N)]
+        for i in range(0,N):
+            for j in range(i+1):
+                self.passageSurArc[i][j] = 0
+                self.passageSurArc[j][i] = 0
 
     def jobsNV(self):
         return self.jobsNonVisites
@@ -54,19 +62,6 @@ class Fourmi():
 
     def chemin(self):
         return self.piste
-
-    def Fourmi(m_flowshop,piste):
-        self.piste = piste
-        self.m_flowshop = m_flowshop
-        self.jobsNonVisites = []
-        for i in range N:
-            self.jobsNonVisites.append(i)
-        self.jobsVisites = []
-        self.passageSurArc = [[0 for i in range N] for j in range N]
-        for i in range N:
-            for j in range i+1:
-                self.passageSurArc[i][j]=0
-                self.passageSurArc[j][i]=0
 
     def getPiste():
         return self.piste
