@@ -62,3 +62,22 @@ class Piste() :
                     self.getPheromoneSurArc()[i][j]+= four.getPassage()[i][j] * self.COEF_ELITISTE * (self.Q / four.getCmax())
                 self.getPheromoneSurArc()[j][i] = self.getPheromoneSurArc()[i][j];
 
+    def majBestSolution(self):
+        best = self.getFourmi(0).getCmax();
+        bestF = self.getFourmi(0);
+        for four in self.getFourmis():
+            if four.getCmax() < best:
+                best = four.getCmax();
+                bestF = four;
+        if self.getBestCmax() < 0:
+            self.bestCmax=best;
+            self.solutionTemp=bestF.getJobsVisitees();
+        elif self.getBestCmax() > best:
+            self.bestLongueur=best;
+            self.solutionTemp=bestF.getJobsVisitees();
+
+    def resetFourmis(self):
+        self.listeFourmis.clear();
+        self.listeFourmis = [];
+        for i in range(0,self.getFlowshop().nombre_jobs()):
+            self.listeFourmis.add(fourmi.Fourmi(self.getFlowshop(), self));
