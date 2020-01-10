@@ -9,6 +9,7 @@ __date__ = 'Octobre 2019'
 
 import job
 import ordonnancement
+import NEH
 
 class Flowshop():
     def __init__(self, nb_jobs=0, nb_machines=0, l_job=None):
@@ -37,7 +38,7 @@ class Flowshop():
         l = ligne.split() # on récupère les valeurs dans une liste
         self.nb_jobs = int(l[0])
         self.nb_machines = int(l[1])
-       
+
         self.l_job = []
         for i in range(self.nb_jobs):
             ligne = fdonnees.readline() 
@@ -51,7 +52,7 @@ class Flowshop():
 
 if __name__ == "__main__":
     prob = Flowshop()
-    prob.definir_par("jeu1.txt")
-    for i in range(prob.nb_jobs):
-        j = prob.liste_jobs(i)
-        j.afficher()
+    prob.definir_par("tai01.txt")
+    print("nb machine = ",prob.nombre_machines())
+    print("nb job = " ,prob.nombre_jobs())
+    NEH.MethodeNEH(prob)
