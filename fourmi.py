@@ -48,20 +48,6 @@ class Fourmi():
                 self.passageSurArc[i][j] = 0
                 self.passageSurArc[j][i] = 0
 
-    def jobsNV(self):
-        return self.jobsNonVisites
-
-    def jobsV(self):
-        return self.jobsVisites
-
-    def completion(self):
-        return self.cmax
-
-    def passeSurArc(self):
-        return self.passageSurArc
-
-    def chemin(self):
-        return self.piste
 
     def getPiste():
         return self.piste
