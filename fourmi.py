@@ -47,51 +47,51 @@ class Fourmi():
                 self.passageSurArc[i][j] = 0
                 self.passageSurArc[j][i] = 0
 
-    def getPiste():
+    def getPiste(self):
         return self.piste
 
-    def getJobsNonVisites():
+    def getJobsNonVisites(self):
         return self.jobsNonVisites
 
-    def getJobsVisites():
+    def getJobsVisites(self):
         return self.jobsVisites
 
-    def getPassage():
+    def getPassage(self):
         return self.passageSurArc
 
-    def getCmax():
+    def getCmax(self):
         return self.cmax
 
-    def getFlowshop():
+    def getFlowshop(self):
         return self.m_flowshop
 
-    def ajouterJobsVisites(numeroJob):
+    def ajouterJobsVisites(self,numeroJob):
         if self.getDernierJobVisite()!=-1:
             self.getPassage()[self.getDernierJobVisite()][numeroJob]=1
         self.jobsVisites.append(numeroJob)
         indice = self.jobsNonVisites.index(numeroJob)
         del self.jobsNonVisites[indice]
 
-    def getDernierJobVisite():
+    def getDernierJobVisite(self):
         if len(self.getJobsVisites())==0:
             return -1
         else:
             return self.getJobsVisites()[-1]
 
-    def setProchainJob():
-        test = false
+    def setProchainJob(self):
+        test = False
         x = random.random()
         sommeDesProba = 0
         k = 0
-        while test!=true and k<len(self.getJobsNonVisites):
+        while test!=True and k<len(self.getJobsNonVisites):
             sommeDesProba = sommeDesProba + self.getProbaIaJ(self.getDernierJobVisite(),self.getJobsNonVisites[k])
             if x<=sommeDesProba:
                 self.ajouterJobsVisites(self.getJobsNonVisites[k])
-                test = true
+                test = True
             k+= 1
     
-    def getProbaIaJ(i,j):
-        l = Ordonnancement(self.pb.nombre_machines())
+    def getProbaIaJ(self,i,j):
+        l = ordonnancement.Ordonnancement(self.pb.nombre_machines())
         l.ordonnancer_liste_job([i,j])
         self.cmax = l.duree()
         num = pow(self.getPiste().getPheromoneSurArc()[i][j],Piste.ALPHA)*pow(1.0/1.0.,Piste.BETA)
@@ -100,7 +100,7 @@ class Fourmi():
             den = den + pow(self.getPiste().getPheromoneSurArc()[i][numJob],Piste.ALPHA)*pow(1.0/1.0,Piste.BETA)
         return (num/den)
 
-    def setCmax():
-        l = Ordonnancement(self.pb.nombre_machines())
+    def setCmax(self):
+        l = ordonnancement.Ordonnancement(self.pb.nombre_machines())
         l.ordonnancer_liste_job(self.getJobsVisites)
         self.cmax = l.duree()
