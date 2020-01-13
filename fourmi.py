@@ -47,21 +47,6 @@ class Fourmi():
                 self.passageSurArc[i][j] = 0
                 self.passageSurArc[j][i] = 0
 
-    def jobsNV(self):
-        return self.jobsNonVisites
-
-    def jobsV(self):
-        return self.jobsVisites
-
-    def completion(self):
-        return self.cmax
-
-    def passeSurArc(self):
-        return self.passageSurArc
-
-    def chemin(self):
-        return self.piste
-
     def getPiste():
         return self.piste
 
@@ -109,10 +94,10 @@ class Fourmi():
         l = Ordonnancement(self.pb.nombre_machines())
         l.ordonnancer_liste_job([i,j])
         self.cmax = l.duree()
-        num = pow(self.getPiste().getPheromoneSurArc()[i][j],Piste.ALPHA)*pow(1.0/self.m_flowshop.,Piste.BETA)
+        num = pow(self.getPiste().getPheromoneSurArc()[i][j],Piste.ALPHA)*pow(1.0/1.0.,Piste.BETA)
         den = 0
         for numJob in self.getJobsNonVisites():
-#            den = den + pow(self.getPiste().getPheromoneSurArc()[i][numJob],Piste.ALPHA)*pow(1.0/self.####################,Piste.BETA)
+            den = den + pow(self.getPiste().getPheromoneSurArc()[i][numJob],Piste.ALPHA)*pow(1.0/1.0,Piste.BETA)
         return (num/den)
 
     def setCmax():
