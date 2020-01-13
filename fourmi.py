@@ -1,7 +1,6 @@
 from flowshop import Flowshop
 import job
 import ordonnancement
-
 import random
 import numpy as np
 
