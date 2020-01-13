@@ -1,6 +1,8 @@
 from flowshop import Flowshop
-import job
-import ordonnancement
+from piste import Piste
+from job import Job
+from ordonnancement import Ordonnancement
+
 import random
 import numpy as np
 
@@ -11,6 +13,7 @@ for i in range(pb.nb_jobs):
     j.afficher()
 N = pb.nombre_jobs()    #nombre de jobs
 F = N                   #nombre de fourmis
+
 """print (N,F)
 
 visiterIterAvant = [[0 for j in range(N)] for i in range(F)]
@@ -31,76 +34,102 @@ pherotrajet = np.zeros((N,N))  #initialement il n'y a pas de pheromones à dépo
 probadevisite = [1 for i in range(N)]  #initialement chaque job a une proba de 1 de visite pour chaque fourmi"""
 
 class Fourmi():
+    """ Classe modélisant une fourmi.
+    
+    Attributes:
+            flowshop (Flowshop): Instance d'un problème de flowshop de permutation
 
+            piste (Piste): Instance d'une piste, aggrège les principales caractéristiques
+            de la piste parcourue par les fourmis.
 
-    def __init__(self,m_flowshop,piste):
-        N=m_flowshop.nombre_jobs()
+            ordonnancement (Ordonnancement): Chemin pris par la fourmi.
+
+            jobs_non_visites (list<Job>): Liste des jobs encore non ordonnancés.
+
+            passage_sur_arc (numpy.array<bool>): Une case vaut True si la fourmi a emprunté
+            l'arc correspondant.
+
+            cmax (float): Distance totale parcourue par la fourmi, 
+            ou durée totale de l'ordonnancement.
+
+    """
+
+    def __init__(self, flowshop : Flowshop, piste : Piste):
+        """ Initialise un objet Fourmi.
+        
+        Note: 
+            bla bla bla
+        
+        Parameters:
+            flowshop (Flowshop): Instance d'un problème de flowshop de permutation
+
+            piste (Piste): Instance d'une piste, aggrège les principales caractéristiques
+            de la piste parcourue par les fourmis.
+        
+        Keyword arguments:
+            bla bla bla
+                        
+        """
         self.piste = piste
-        self.m_flowshop = m_flowshop
-        self.jobsNonVisites = []
-        for i in range(0,N):
-            self.jobsNonVisites.append(i)
-        self.jobsVisites = []
-        self.passageSurArc = [[0 for i in range(0,N)] for j in range(0,N)]
-        for i in range(0,N):
-            for j in range(i+1):
-                self.passageSurArc[i][j] = 0
-                self.passageSurArc[j][i] = 0
+        self.flowshop = flowshop
+        self.ordonnancement = Ordonnancement(flowshop.nb_machines)
 
-    def getPiste(self):
-        return self.piste
+        self.jobs_non_visites = flowshop.l_job.copy()
 
-    def getJobsNonVisites(self):
-        return self.jobsNonVisites
+        self.passage_sur_arc = np.zeros((flowshop.nb_jobs, flowshop.nb_jobs), dtype=bool)
 
-    def getJobsVisites(self):
-        return self.jobsVisites
+    def ajouter_job_visite(self, job : Job):
+        """ Ajoute à l'ordonnancement le job visité et supprime ce dernier de la liste
+        des jobs non visites.
 
-    def getPassage(self):
-        return self.passageSurArc
+        Attributes:
+            job (Job): Job visité par la fourmi durant l'itération.
 
-    def getCmax(self):
-        return self.cmax
+        """
+        if self.get_dernier_job_visite() != -1:
+            self.passage_sur_arc[self.get_dernier_job_visite()][job.num] = True
 
-    def getFlowshop(self):
-        return self.m_flowshop
+        self.ordonnancement.ordonnancer_job(job)
 
-    def ajouterJobsVisites(self,numeroJob):
-        if self.getDernierJobVisite()!=-1:
-            self.getPassage()[self.getDernierJobVisite()][numeroJob]=1
-        self.jobsVisites.append(numeroJob)
-        indice = self.jobsNonVisites.index(numeroJob)
-        del self.jobsNonVisites[indice]
+        indice = self.jobs_non_visites.index(job)
+        del self.jobs_non_visites[indice]
 
-    def getDernierJobVisite(self):
-        if len(self.getJobsVisites())==0:
+    def get_dernier_job_visite(self):
+        """ Retourne le numéro du dernier job visité. """
+
+        if len(self.ordonnancement.seq) == 0:
             return -1
         else:
-            return self.getJobsVisites()[-1]
+            return self.ordonnancement.seq[-1].num
 
-    def setProchainJob(self):
-        test = False
-        x = random.random()
-        sommeDesProba = 0
-        k = 0
-        while test!=True and k<len(self.getJobsNonVisites):
-            sommeDesProba = sommeDesProba + self.getProbaIaJ(self.getDernierJobVisite(),self.getJobsNonVisites[k])
-            if x<=sommeDesProba:
-                self.ajouterJobsVisites(self.getJobsNonVisites[k])
-                test = True
-            k+= 1
+    def set_job_suivant(self):
+        """ Calcule le prochain Job à visiter pour la fourmi. """
+
+        proba_jobs_non_visites = []
+
+        for job in self.jobs_non_visites:
+            proba_jobs_non_visites.append(
+                self.get_proba(self.get_dernier_job_visite()
+                , job))
+
+        job_suivant = np.random.choice(self.jobs_non_visites, p=proba_jobs_non_visites)
+        self.ajouter_job_visite(job_suivant)
     
-    def getProbaIaJ(self,i,j):
-        l = ordonnancement.Ordonnancement(self.pb.nombre_machines())
-        l.ordonnancer_liste_job([i,j])
-        self.cmax = l.duree()
-        num = pow(self.getPiste().getPheromoneSurArc()[i][j],Piste.ALPHA)*pow(1.0/1.0.,Piste.BETA)
-        den = 0
-        for numJob in self.getJobsNonVisites():
-            den = den + pow(self.getPiste().getPheromoneSurArc()[i][numJob],Piste.ALPHA)*pow(1.0/1.0,Piste.BETA)
-        return (num/den)
+    def get_proba(self, i : int, j : int):
+        """ Calcule la probabilité pour une fourmi d'aller d'un Job i à un Job J.
 
-    def setCmax(self):
-        l = ordonnancement.Ordonnancement(self.pb.nombre_machines())
-        l.ordonnancer_liste_job(self.getJobsVisites)
-        self.cmax = l.duree()
+        Attributes:
+            i (int): Numéro du Job de départ
+
+            j (int): Numéro du Job d'arrivée
+        """
+        num = pow(self.piste.pheromone_sur_arc[i][j], Piste.ALPHA) * pow(1.0, Piste.BETA)
+        den = 0
+        for num_job in self.jobs_non_visites():
+            den = den + pow(self.piste.pheromone_sur_arc[i][num_job], Piste.ALPHA) \
+                * pow(1.0, Piste.BETA)
+
+        return num / den            
+
+    def set_cmax(self):
+        self.cmax = self.ordonnancement.dur

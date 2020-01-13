@@ -12,12 +12,30 @@ import ordonnancement
 import NEH
 
 class Flowshop():
+    """ Classe modélisant un problème de flowshop de permutation. 
+    
+    Attributes:
+        nb_jobs (int): Nombre de jobs dans le problème.
+
+        nb_machines (int): Nombre de machine dans le problème.
+
+        l_job (list<Job>): Liste contenant les objets Job.
+
+    """
+
     def __init__(self, nb_jobs=0, nb_machines=0, l_job=None):
-        # nombre de jobs pour le problème
+        """ Initialise une instance de Flowshop.
+        
+        Keyword arguments:
+            nb_jobs (int): Nombre de jobs dans le problème.
+
+            nb_machines (int): Nombre de machine dans le problème.
+
+            l_job (list<Job>): Liste contenant les objets Job.
+                        
+        """
         self.nb_jobs = nb_jobs
-        # nombre de machine pour le problème
         self.nb_machines = nb_machines
-        # liste des jobs pour le problème
         self.l_job = l_job
 
     def nombre_jobs(self):

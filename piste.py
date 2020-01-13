@@ -1,6 +1,28 @@
-import flowshop,job,ordonnancement,fourmi
+from flowshop import Flowshop
+from fourmi import Fourmi
+from job import Job
+from ordonnancement import Ordonnancement
+
+import random
+import numpy as np
 
 class Piste() :
+    """ Classe modélisant une piste parcourue par des fourmis.
+    
+    Attributes:
+        flowshop (Flowshop): Instance d'un problème de flowshop de permutation
+
+        pheromone_sur_arc (numpy.array<float>): Stocke la quantité de phéromone présente
+        sur chaque segment/arc de la piste.
+
+        cbest (float): Plus courte distance totale parcourue par une des fourmis.
+
+        nombre_fourmis (int): Nombre de fourmis parcourant la piste.
+
+        liste_fourmis (list<Fourmi>): Liste contenant l'ensemble des Fourmi parcourant 
+        la Piste.
+            
+    """
 
     ALPHA = 1
     BETA = 2
@@ -10,74 +32,58 @@ class Piste() :
     NOMBRE_ELITISTE = 20
     COEF_ELITISTE = 10
     MAX_TIME = 60
-    c_ini_pheromone = 0.1
-    NOMBRE_FOURMI = 101
+    C_INI_PHEROMONE = 0.1
+    NOMBRE_FOURMIS = 101
 
-    def __init__(self,flowshop):
+    def __init__(self, flowshop : Flowshop, nombre_fourmis=NOMBRE_FOURMIS):
+        """ Initialise un objet Piste.
+        
+        Parameters:
+            flowshop (Flowshop): Instance d'un problème de flowshop de permutation
 
-        self.fs = flowshop
-        self.pheromoneSurArc = [[]]
-        self.bestLongueur = -1
-        self.solutionTemp = []
-        self.listeFourmis = []
-        for i in range(0,self.fs.nombre_jobs()):
-            for j in range(0,i):
-              self.pheromoneSurArc[i][j]=self.c_ini_pheromone
-              self.pheromoneSurArc[j][i]=self.pheromoneSurArc[i][j]
+            nombre_fourmis (int): Nombre de fourmis parcourant la piste.
+                        
+        """
 
-        self.nombreFourmi = self.NOMBRE_FOURMI
-        for i in range(0,self.nombreFourmi):
-            self.listeFourmis.append(fourmi.Fourmi(self.fs,self))
+        self.flowshop = flowshop
+        self.pheromone_sur_arc = self.C_INI_PHEROMONE * np.ones((flowshop.nb_jobs, flowshop.nb_jobs))
+        self.cbest = -1
+        self.solution_temp = []
+        self.nombre_fourmis = nombre_fourmis
+
+        self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
+
 
     #------------------------------------------------------------
     # Methods                                                   ||
     #------------------------------------------------------------
 
-    def getFlowshop(self):
-        return self.fs
-
-    def getFourmi(self,index):
-        return self.getFourmi()[index]
-
-    def getFourmis(self):
-        return self.getFourmi()
-
-    def getPheromonesSurArc(self):
-        return self.pheromoneSurArc
-
-    def getBestLongueur(self):
-        return self.bestLongueur
-
-    def getSolutionTemp(self):
-        return self.solutionTemp
-
-    def majPheromone(self):
-        for i in range(0,self.fs.nombre_jobs()):
+    def maj_pheromone(self):
+        for i in range(0,self.flowshop.nombre_jobs()):
             for j in range(0,i):
-                self.getPheromoneSurArc()[i][j]=self.P * self.getPheromoneSurArc()[i][j]
-                for four in self.getFourmis():
-                    if not four.getElitiste():
-                        self.getPheromoneSurArc()[i][j] += four.getPassage()[i][j]*(self.Q / four.getCmax())
-                else:
-                    self.getPheromoneSurArc()[i][j]+= four.getPassage()[i][j] * self.COEF_ELITISTE * (self.Q / four.getCmax())
-                self.getPheromoneSurArc()[j][i] = self.getPheromoneSurArc()[i][j]
+                self.pheromone_sur_arc[i][j]=self.P * self.pheromone_sur_arc[i][j]
+                for fourmi in self.liste_fourmis:
+                    self.pheromone_sur_arc[i][j] \
+                    += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.cmax)
+               
+                    self.pheromone_sur_arc[j][i] = self.pheromone_sur_arc[i][j]
 
     def majBestSolution(self):
-        best = self.getFourmi(0).getCmax()
-        bestF = self.getFourmi(0)
-        for four in self.getFourmis():
-            if four.getCmax() < best:
-                best = four.getCmax()
-                bestF = four
-        if self.getBestCmax() < 0:
-            self.bestCmax=best
-            self.solutionTemp=bestF.getJobsVisitees()
-        elif self.getBestCmax() > best:
-            self.bestLongueur=best
-            self.solutionTemp=bestF.getJobsVisitees()
+        best = self.liste_fourmis[0].cmax
+        best_fourmi = self.liste_fourmis[0]
+        for fourmi in self.liste_fourmis:
+            if fourmi.cmax < best:
+                best = fourmi.cmax
+                best_fourmi = fourmi
 
-    def resetFourmis(self):
-        self.listeFourmis.clear()
-        self.listeFourmis = []
-        for i in range(0,self.getFlowshop().nombre_jobs()):
-            self.listeFourmis.add(fourmi.Fourmi(self.getFlowshop(), self))
+        if self.cbest < 0:
+            self.cbest = best
+            self.solution_temp = best_fourmi.ordonnancement
+
+        elif self.cbest > best:
+            self.cbest = best
+            self.solution_temp = best_fourmi.ordonnancement
+
+    def reset_fourmis(self):
+        self.liste_fourmis.clear()
+        self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]

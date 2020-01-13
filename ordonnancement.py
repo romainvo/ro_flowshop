@@ -9,9 +9,28 @@ __date__ = 'Octobre 2019'
 import job
 
 class Ordonnancement():
+    """ Classe modélisant l'ordonancement d'un problème de flowshop de permutation.
+
+    Attributes:
+        seq (list<Job>): Liste ordonnée de Job correspondant à leur séquencement.
+
+        nb_machines (int): Nombre de machine dans le problème.
+
+        dur (float): Durée totale de l'ordonnancement - Cmax.
+
+        date_dispo(list<float>): Date à partir de laquelle chaque machine est libre.
+
+    """
 
     # constructeur pour un ordonnancement vide
-    def __init__(self, nb_machines):
+    def __init__(self, nb_machines : int):
+        """ Initialise une instance d'Ordonnancement.
+
+        Attributes:
+            nb_machines (int): Nombre de machine dans le problème.
+
+        """
+
         # séquence des jobs
         self.seq = []
         # nombre de machiners

@@ -7,7 +7,33 @@ __author__ = 'Chams Lahlou'
 __date__ = 'Octobre 2019'
 
 class Job():
-    def __init__(self, numero, tab_durees=[]):
+    """ Classe modélisant un job dans un problème de flowshop de permutation. 
+    
+    Attributes:
+        num (int): Numéro du Job.
+
+        nb_op (int): Nombre d'opérations à effectuer pour ce Job.
+
+        duree_op (list<float>): Liste des durées corespondant à chaque opération.
+
+        date_deb (list<float>): List des dates de début des opérations lorsque le
+        Job est ordonnancé.
+
+        duree_job (float): Somme des durées de chaque opération.
+    
+    """
+
+    def __init__(self, numero : int, tab_durees=[]):
+        """ Initialise un Job.
+
+        Parameters:
+            numero (int): Numéro du Job.
+
+        Keyword arguments:
+            tab_durees (list<float>): Vide par défaut, contient les durées
+            correspondant à chaque opération.
+            
+        """
         # numéro du job
         self.num = numero
         # nombre d'opérations
