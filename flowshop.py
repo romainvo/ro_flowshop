@@ -9,7 +9,7 @@ __date__ = 'Octobre 2019'
 
 import job
 import ordonnancement
-import NEH
+import NEH, deux_opt
 
 class Flowshop():
     """ Classe modélisant un problème de flowshop de permutation. 
@@ -70,7 +70,12 @@ class Flowshop():
 
 if __name__ == "__main__":
     prob = Flowshop()
-    prob.definir_par("jeu1.txt")
+    prob.definir_par("tai52.txt")
     print("nb machine = ",prob.nombre_machines())
     print("nb job = " ,prob.nombre_jobs())
-    NEH.MethodeNEH(prob)
+    ordo_NEH = NEH.MethodeNEH(prob)
+
+    # Test 2-opt
+    new_ordo = deux_opt.deux_opt(ordo_NEH)
+    print("\n Test de 2-opt : \n")
+    new_ordo.afficher()

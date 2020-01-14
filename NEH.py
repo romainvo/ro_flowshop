@@ -56,4 +56,6 @@ def MethodeNEH(Flowshop):
     Flowshop.l_job = OrdoFinal
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
-    OrdonnancementComplet.afficher();
+    OrdonnancementComplet.afficher()
+
+    return OrdonnancementComplet
