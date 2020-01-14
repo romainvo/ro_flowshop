@@ -5,6 +5,7 @@ from ordonnancement import Ordonnancement
 
 import random
 import numpy as np
+import time
 
 class Piste() :
     """ Classe modélisant une piste parcourue par des fourmis.
@@ -74,11 +75,7 @@ class Piste() :
                
                     self.pheromone_sur_arc[j][i] = self.pheromone_sur_arc[i][j]
 
-    def majBestSolution(self):
-        """ Met a jour le meilleur ordre des jobs et son cmax
-
-        """
-
+    def maj_best_solution(self):
         best = self.liste_fourmis[0].cmax
         best_fourmi = self.liste_fourmis[0]
         for fourmi in self.liste_fourmis:
@@ -101,3 +98,46 @@ class Piste() :
 
         self.liste_fourmis.clear()
         self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
+
+if __name__ == "__main__":
+    
+    flowshop = Flowshop()
+    flowshop.definir_par("jeu_donnees_1/tai51.txt")
+    print("nb machine = ", flowshop.nombre_machines())
+    print("nb job = " , flowshop.nombre_jobs())
+
+    piste = Piste(flowshop)
+
+    start_time = time.time()
+    spent_time = 0
+    index = 0
+		
+    while True: 
+
+        #Initialise la première ville de chaque fourmi
+        for k in range(len(piste.liste_fourmis)):
+            piste.liste_fourmis[k].ajouter_job_visite(
+                random.choice
+                (piste.liste_fourmis[k].jobs_non_visites))
+        
+
+        for k in range(len(piste.liste_fourmis)):
+            for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
+                piste.liste_fourmis[k].set_job_suivant()	
+        
+            piste.liste_fourmis[k].set_cmax()
+        
+
+        piste.maj_best_solution()
+
+        piste.maj_pheromone()
+        piste.reset_fourmis()
+        
+        spentTime = time.time() - start_time
+        index += 1
+
+        print("Indexation : {} - {} ".format(index, piste.cbest))
+
+        if spentTime > 60:
+            break 
+
