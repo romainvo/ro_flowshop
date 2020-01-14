@@ -59,6 +59,12 @@ class Piste() :
     #------------------------------------------------------------
 
     def maj_pheromone(self):
+        """ Met a jour la quantite de pheromones en fonction du cmax 
+        parcouru par les fourmis ainsi qu'en fonction du coefficient d'evaporation
+        P des pheromones
+        Plus l'ordre des jobs parcouru est faible, plus la quantite de pheromones deposee est importante
+        """
+
         for i in range(0,self.flowshop.nombre_jobs()):
             for j in range(0,i):
                 self.pheromone_sur_arc[i][j]=self.P * self.pheromone_sur_arc[i][j]
@@ -69,6 +75,10 @@ class Piste() :
                     self.pheromone_sur_arc[j][i] = self.pheromone_sur_arc[i][j]
 
     def majBestSolution(self):
+        """ Met a jour le meilleur ordre des jobs et son cmax
+
+        """
+
         best = self.liste_fourmis[0].cmax
         best_fourmi = self.liste_fourmis[0]
         for fourmi in self.liste_fourmis:
@@ -85,5 +95,9 @@ class Piste() :
             self.solution_temp = best_fourmi.ordonnancement
 
     def reset_fourmis(self):
+        """ Apres un tour complet la memoire de chaque fourmi est reinitialisee
+
+        """
+
         self.liste_fourmis.clear()
         self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
