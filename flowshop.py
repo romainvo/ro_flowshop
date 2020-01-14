@@ -38,12 +38,6 @@ class Flowshop():
         self.nb_machines = nb_machines
         self.l_job = l_job
 
-    def nombre_jobs(self):
-        return self.nb_jobs
-
-    def nombre_machines(self):
-        return self.nb_machines
-
     def liste_jobs(self, num):
         return self.l_job[num]
 
@@ -70,7 +64,7 @@ class Flowshop():
 
 if __name__ == "__main__":
     prob = Flowshop()
-    prob.definir_par("jeu1.txt")
-    print("nb machine = ",prob.nombre_machines())
-    print("nb job = " ,prob.nombre_jobs())
+    prob.definir_par("jeu_donnees_1/tai51.txt")
+    print("nb machine = ",prob.nb_machines)
+    print("nb job = " ,prob.nb_jobs)
     NEH.MethodeNEH(prob)

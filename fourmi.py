@@ -9,20 +9,20 @@ class Fourmi():
     """ Classe modélisant une fourmi.
     
     Attributes:
-            flowshop (Flowshop): Instance d'un problème de flowshop de permutation
+        flowshop (Flowshop): Instance d'un problème de flowshop de permutation
 
-            piste (Piste): Instance d'une piste, aggrège les principales caractéristiques
-            de la piste parcourue par les fourmis.
+        piste (Piste): Instance d'une piste, aggrège les principales caractéristiques
+        de la piste parcourue par les fourmis.
 
-            ordonnancement (Ordonnancement): Chemin pris par la fourmi.
+        ordonnancement (Ordonnancement): Chemin pris par la fourmi.
 
-            jobs_non_visites (list<Job>): Liste des jobs encore non ordonnancés.
+        jobs_non_visites (list<Job>): Liste des jobs encore non ordonnancés.
 
-            passage_sur_arc (numpy.array<bool>): Une case vaut True si la fourmi a emprunté
-            l'arc correspondant.
+        passage_sur_arc (numpy.array<bool>): Une case vaut True si la fourmi a emprunté
+        l'arc correspondant.
 
-            cmax (float): Distance totale parcourue par la fourmi, 
-            ou durée totale de l'ordonnancement.
+        cmax (float): Distance totale parcourue par la fourmi, 
+        ou durée totale de l'ordonnancement.
 
     """
 
@@ -60,7 +60,7 @@ class Fourmi():
 
         """
         if self.get_dernier_job_visite() != -1:
-            self.passage_sur_arc[self.get_dernier_job_visite()][job.num] = True
+            self.passage_sur_arc[self.get_dernier_job_visite()][job.numero] = True
 
         self.ordonnancement.ordonnancer_job(job)
 
@@ -70,10 +70,10 @@ class Fourmi():
     def get_dernier_job_visite(self):
         """ Retourne le numéro du dernier job visité. """
 
-        if len(self.ordonnancement.seq) == 0:
+        if len(self.ordonnancement.sequence) == 0:
             return -1
         else:
-            return self.ordonnancement.seq[-1].num
+            return self.ordonnancement.sequence[-1].numero
 
     def set_job_suivant(self):
         """ Calcule le prochain Job à visiter pour la fourmi et ajoute ce job
@@ -89,7 +89,7 @@ class Fourmi():
         for job in self.jobs_non_visites:
             proba_jobs_non_visites.append(
                 self.get_proba(self.get_dernier_job_visite()
-                , job.num))
+                , job.numero))
 
         job_suivant = np.random.choice(self.jobs_non_visites, p=proba_jobs_non_visites)
         self.ajouter_job_visite(job_suivant)
@@ -105,13 +105,12 @@ class Fourmi():
         num = pow(self.piste.pheromone_sur_arc[i][j], Piste.ALPHA) * pow(1.0, Piste.BETA)
         den = 0
         for job in self.jobs_non_visites:
-            den = den + pow(self.piste.pheromone_sur_arc[i][job.num], Piste.ALPHA) \
+            den = den + pow(self.piste.pheromone_sur_arc[i][job.numero], Piste.ALPHA) \
                 * pow(1.0, Piste.BETA)
 
         return num / den            
 
     def set_cmax(self):
-        self.cmax = self.ordonnancement.dur
-
+        self.cmax = self.ordonnancement.duree
 
 from piste import Piste

@@ -66,7 +66,7 @@ class Piste() :
         Plus l'ordre des jobs parcouru est faible, plus la quantite de pheromones deposee est importante
         """
 
-        for i in range(0,self.flowshop.nombre_jobs()):
+        for i in range(0, self.flowshop.nb_jobs):
             for j in range(0,i):
                 self.pheromone_sur_arc[i][j]=self.P * self.pheromone_sur_arc[i][j]
                 for fourmi in self.liste_fourmis:
@@ -102,9 +102,9 @@ class Piste() :
 if __name__ == "__main__":
     
     flowshop = Flowshop()
-    flowshop.definir_par("jeu_donnees_1/tai51.txt")
-    print("nb machine = ", flowshop.nombre_machines())
-    print("nb job = " , flowshop.nombre_jobs())
+    flowshop.definir_par("jeu_donnees_1/tai01.txt")
+    print("nb machine = ", flowshop.nb_machines)
+    print("nb job = " , flowshop.nb_jobs)
 
     piste = Piste(flowshop)
 
@@ -137,6 +137,8 @@ if __name__ == "__main__":
         index += 1
 
         print("Indexation : {} - {} ".format(index, piste.cbest))
+
+        piste.solution_temp.afficher()
 
         if spentTime > 60:
             break 
