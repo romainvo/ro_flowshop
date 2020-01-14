@@ -38,12 +38,6 @@ class Flowshop():
         self.nb_machines = nb_machines
         self.l_job = l_job
 
-    def nombre_jobs(self):
-        return self.nb_jobs
-
-    def nombre_machines(self):
-        return self.nb_machines
-
     def liste_jobs(self, num):
         return self.l_job[num]
 
@@ -75,7 +69,12 @@ if __name__ == "__main__":
     print("nb job = " ,prob.nombre_jobs())
     ordo_NEH = NEH.MethodeNEH(prob)
 
-    # Test 2-opt
+    prob.definir_par("jeu_donnees_1/tai51.txt")
+    print("nb machine = ",prob.nb_machines)
+    print("nb job = " ,prob.nb_jobs)
+    NEH.MethodeNEH(prob)
+
+     # Test 2-opt
     new_ordo = deux_opt.deux_opt(ordo_NEH)
     print("\n Test de 2-opt : \n")
     new_ordo.afficher()

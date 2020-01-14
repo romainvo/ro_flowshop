@@ -16,7 +16,7 @@ class Ordonnancement():
 
         nb_machines (int): Nombre de machine dans le problème.
 
-        dur (float): Durée totale de l'ordonnancement - Cmax.
+        duree (float): Durée totale de l'ordonnancement - Cmax.
 
         date_dispo(list<float>): Date à partir de laquelle chaque machine est libre.
 
@@ -32,45 +32,55 @@ class Ordonnancement():
         """
 
         # séquence des jobs
-        self.seq = []
+        self.sequence = []
         # nombre de machiners
         self.nb_machines = nb_machines
         # durée totale de l'ordonnancement
-        self.dur = 0
+        self.duree = 0
         # date à partir de laquelle chaque machine est libre
         self.date_dispo = [0 for i in range(self.nb_machines)]
-
-    def duree(self):
-        return self.dur
-    
-    def sequence(self):
-        return self.seq
     
     def date_disponibilite(self, num_machine):
+        """ Retourne la date de disponibilité de la machine 'num_machine'.
+
+        Attributes:
+            num_machine (int): Numéro de la machine.
+
+        """
+
         return self.date_dispo[num_machine]
 
     def date_debut_operation(self, job, operation):
-        return job.date_deb[operation]
+        """ Retourne la date de début de début d'une opération d'un job.
+
+        Attributes:
+            job (Job): 
+
+            operation (int): Numéro de l'opération
+
+        """
+
+        return job.date_debut[operation]
 
     def fixer_date_debut_operation(self, job, operation, date):
-        job.date_deb[operation] = date
+        job.date_debut[operation] = date
 
     def afficher(self):
         print("Ordre des jobs :", end='')
-        for job in self.seq:
-            print(" ",job.numero()," ", end='')
+        for job in self.sequence:
+            print(" ",job.numero," ", end='')
         print()
-        for job in self.seq:
-            print("Job", job.numero(), ":", end='')
+        for job in self.sequence:
+            print("Job", job.numero, ":", end='')
             for mach in range(self.nb_machines):
                 print(" op", mach, "à t =", self.date_debut_operation(job, mach),"|", end='')
             print()
-        print("Cmax =", self.dur)
+        print("Cmax =", self.duree)
 
     # ajoute un job dans l'ordonnancement
     # à la suite de ceux déjà ordonnancés
     def ordonnancer_job(self, job):
-        self.seq += [job]
+        self.sequence += [job]
         for mach in range(self.nb_machines):
             if mach == 0:   # première machine
                 self.fixer_date_debut_operation(job, 0, self.date_dispo[0])
@@ -79,7 +89,7 @@ class Ordonnancement():
                 self.fixer_date_debut_operation(job, mach, date)
             self.date_dispo[mach] = self.date_debut_operation(job, mach) + \
             job.duree_operation(mach)
-        self.dur = max(self.dur, self.date_dispo[self.nb_machines-1])
+        self.duree = max(self.duree, self.date_dispo[self.nb_machines-1])
 
     # ajoute les jobs d'une liste dans l'ordonnancement
     # à la suite de ceux déjà ordonnancés
@@ -97,7 +107,7 @@ if __name__ == "__main__":
     ordo = Ordonnancement(5)
     ordo.ordonnancer_job(a)
     ordo.ordonnancer_job(b)
-    ordo.sequence()
+    ordo.sequence
     ordo.afficher()
     a.afficher()
     b.afficher()
