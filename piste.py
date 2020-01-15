@@ -2,7 +2,7 @@ from flowshop import Flowshop
 from fourmi import Fourmi
 from job import Job
 from ordonnancement import Ordonnancement
-
+import NEH
 import random
 import numpy as np
 import time
@@ -103,6 +103,13 @@ class Piste() :
         self.liste_fourmis.clear()
         self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
 
+    def appliquer_NEH(self):
+        for i in range(self.nombre_fourmis) :
+            seuil = random.randint(0,100)
+            if seuil < 20 :
+                ordo_actuel = self.liste_fourmis[i].ordonnancement
+                self.liste_fourmis[i].ordonnancement=NEH.MethodeNEH(ordo_actuel)
+
     def set_elitiste(self, nombre : int):
 
         for i in range(nombre):
@@ -158,7 +165,7 @@ if __name__ == "__main__":
 
         piste.maj_pheromone()
         piste.reset_fourmis()
-        
+
         spentTime = time.time() - start_time
         index += 1
 
