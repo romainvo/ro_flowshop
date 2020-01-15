@@ -27,7 +27,7 @@ def MethodeNEH(Flowshop):
     ListeJob=OrdonnerListe(Flowshop.l_job)
     NbJob = Flowshop.nb_jobs
     NbMachine=Flowshop.nb_machines
-    """ L'ordo est pour l'instant représenté par la liste ordonnée des jobs"""
+    """ Pour ajay : L'ordo est pour l'instant représenté par la liste ordonnée des jobs"""
     OrdoFinal=[]
     OrdoTest=[]
     OrdoTestmin=[]
