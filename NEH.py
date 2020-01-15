@@ -23,10 +23,10 @@ def CopyJobs(copie) :
     return copieur
 
 #deuxieme etape de la méthode
-def MethodeNEH(Flowshop):
-    ListeJob=OrdonnerListe(Flowshop.l_job)
-    NbJob = Flowshop.nb_jobs
-    NbMachine=Flowshop.nb_machines
+def MethodeNEH(ordo):
+    ListeJob=OrdonnerListe(ordo.sequence)
+    NbJob = len(ordo.sequence)
+    NbMachine=ordo.nb_machines
 
     OrdoFinal=[]
     OrdoTest=[]
@@ -48,14 +48,14 @@ def MethodeNEH(Flowshop):
                 Test = ordonnancement.Ordonnancement(NbMachine)
                 Test.ordonnancer_liste_job(OrdoTest)
                 DureeTest= Test.duree
-                if DureeMin < DureeTest :
+                if DureeMin > DureeTest :
                     OrdoTestmin = OrdoTest
                     DureeMin = DureeTest
         """OrdoFinal= ordo le plus performant à cette étape"""
 
         OrdoFinal = CopyJobs(OrdoTestmin)
 
-    Flowshop.l_job = OrdoFinal
+    ordo.sequence = OrdoFinal
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
     OrdonnancementComplet.afficher()
