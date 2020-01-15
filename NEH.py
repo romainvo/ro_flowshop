@@ -27,7 +27,7 @@ def MethodeNEH(Flowshop):
     ListeJob=OrdonnerListe(Flowshop.l_job)
     NbJob = Flowshop.nb_jobs
     NbMachine=Flowshop.nb_machines
-
+    """ L'ordo est pour l'instant représenté par la liste ordonnée des jobs"""
     OrdoFinal=[]
     OrdoTest=[]
     OrdoTestmin=[]
@@ -48,13 +48,11 @@ def MethodeNEH(Flowshop):
                 Test = ordonnancement.Ordonnancement(NbMachine)
                 Test.ordonnancer_liste_job(OrdoTest)
                 DureeTest= Test.duree
-                if DureeMin < DureeTest :
+                if DureeMin > DureeTest :
                     OrdoTestmin = OrdoTest
                     DureeMin = DureeTest
         """OrdoFinal= ordo le plus performant à cette étape"""
-
         OrdoFinal = CopyJobs(OrdoTestmin)
-
     Flowshop.l_job = OrdoFinal
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
