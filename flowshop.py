@@ -66,7 +66,7 @@ class Flowshop():
 if __name__ == "__main__":
 
     prob = Flowshop()
-    prob.definir_par("tai52.txt")
+    prob.definir_par("jeu_donnees_2/tai52.txt")
     print("nb machine = ",prob.nb_machines)
     print("nb job = " ,prob.nb_jobs)
     start_time = time.time()

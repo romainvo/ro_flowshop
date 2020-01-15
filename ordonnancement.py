@@ -12,7 +12,7 @@ class Ordonnancement():
     """ Classe modélisant l'ordonancement d'un problème de flowshop de permutation.
 
     Attributes:
-        seq (list<Job>): Liste ordonnée de Job correspondant à leur séquencement.
+        sequence (list<Job>): Liste ordonnée de Job correspondant à leur séquencement.
 
         nb_machines (int): Nombre de machine dans le problème.
 

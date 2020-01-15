@@ -28,7 +28,7 @@ class Piste() :
     ALPHA = 1
     BETA = 2
     Q = 100
-    P = 0.2
+    P = 0.5
     ELITISTE = True
     NOMBRE_ELITISTE = 20
     COEF_ELITISTE = 10
@@ -68,10 +68,14 @@ class Piste() :
 
         for i in range(0, self.flowshop.nb_jobs):
             for j in range(0,i):
-                self.pheromone_sur_arc[i][j]=self.P * self.pheromone_sur_arc[i][j]
+                self.pheromone_sur_arc[i][j] = self.P * self.pheromone_sur_arc[i][j]
                 for fourmi in self.liste_fourmis:
-                    self.pheromone_sur_arc[i][j] \
-                    += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.cmax)
+                    if fourmi.elitiste:
+                        self.pheromone_sur_arc[i][j] \
+                            += fourmi.passage_sur_arc[i][j] * (self.COEF_ELITISTE / fourmi.cmax)
+                    else:
+                        self.pheromone_sur_arc[i][j] \
+                            += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.cmax)
                
                     self.pheromone_sur_arc[j][i] = self.pheromone_sur_arc[i][j]
 
@@ -98,6 +102,29 @@ class Piste() :
 
         self.liste_fourmis.clear()
         self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
+
+
+    def set_elitiste(self, nombre : int):
+
+        for i in range(nombre):
+            best = self.liste_fourmis[0].cmax
+            best_fourmi = self.liste_fourmis[0]
+
+            for j in range(len(self.liste_fourmis)):
+                if (self.liste_fourmis[j].cmax < best and not self.liste_fourmis[j].elitiste):
+                    best = self.liste_fourmis[j].cmax
+                    best_fourmi = self.liste_fourmis[j]
+			
+            best_fourmi.elitiste = True
+
+            if i == 0:
+                if self.cbest < 0:
+                    self.cbest = best
+                    self.solution_temp = best_fourmi.ordonnancement			
+                elif self.cbest > best:
+                    self.cbest = best
+                    self.solution_temp = best_fourmi.ordonnancement	
+
 
 if __name__ == "__main__":
     
@@ -128,7 +155,12 @@ if __name__ == "__main__":
             piste.liste_fourmis[k].set_cmax()
         
 
-        piste.maj_best_solution()
+
+        if piste.ELITISTE:
+            piste.set_elitiste(piste.NOMBRE_ELITISTE)
+        else:
+            piste.maj_best_solution()
+
 
         piste.maj_pheromone()
         piste.reset_fourmis()
@@ -141,5 +173,6 @@ if __name__ == "__main__":
         piste.solution_temp.afficher()
 
         if spentTime > 60:
+            print("Nombre d'itérations : {}".format(index))
             break 
 
