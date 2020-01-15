@@ -106,9 +106,11 @@ class Piste() :
     def appliquer_NEH(self):
         for i in range(self.nombre_fourmis) :
             seuil = random.randint(0,100)
-            if seuil < 20 :
+            if seuil < 10 :
                 ordo_actuel = self.liste_fourmis[i].ordonnancement
-                self.liste_fourmis[i].ordonnancement=NEH.MethodeNEH(ordo_actuel)
+                ordo_NEH = NEH.MethodeNEH(ordo_actuel)
+                if ordo_NEH.duree < ordo_actuel.duree :
+                    self.liste_fourmis[i].ordonnancement=ordo_NEH
 
     def set_elitiste(self, nombre : int):
 
@@ -158,6 +160,8 @@ if __name__ == "__main__":
             for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
                 piste.liste_fourmis[k].set_job_suivant()	
         
+        piste.appliquer_NEH()
+
         if piste.ELITISTE:
             piste.set_elitiste(piste.NOMBRE_ELITISTE)
         else:

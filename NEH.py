@@ -57,5 +57,4 @@ def MethodeNEH(ordo):
     ordo.sequence = OrdoFinal
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
-    OrdonnancementComplet.afficher()
     return OrdonnancementComplet
