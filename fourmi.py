@@ -21,9 +21,6 @@ class Fourmi():
         passage_sur_arc (numpy.array<bool>): Une case vaut True si la fourmi a emprunté
         l'arc correspondant.
 
-        cmax (float): Distance totale parcourue par la fourmi, 
-        ou durée totale de l'ordonnancement.
-
     """
 
     def __init__(self, flowshop : Flowshop, piste):
@@ -110,9 +107,6 @@ class Fourmi():
             den = den + pow(self.piste.pheromone_sur_arc[i][job.numero], Piste.ALPHA) \
                 * pow(1.0, Piste.BETA)
 
-        return num / den            
-
-    def set_cmax(self):
-        self.cmax = self.ordonnancement.duree
+        return num / den           
 
 from piste import Piste

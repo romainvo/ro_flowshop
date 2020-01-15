@@ -72,19 +72,19 @@ class Piste() :
                 for fourmi in self.liste_fourmis:
                     if fourmi.elitiste:
                         self.pheromone_sur_arc[i][j] \
-                            += fourmi.passage_sur_arc[i][j] * self.COEF_ELITISTE * (self.Q/ fourmi.cmax)
+                            += fourmi.passage_sur_arc[i][j] * self.COEF_ELITISTE * (self.Q/ fourmi.ordonnancement.duree)
                     else:
                         self.pheromone_sur_arc[i][j] \
-                            += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.cmax)
+                            += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.ordonnancement.duree)
                
                     self.pheromone_sur_arc[j][i] = self.pheromone_sur_arc[i][j]
 
     def maj_best_solution(self):
-        best = self.liste_fourmis[0].cmax
+        best = self.liste_fourmis[0].ordonnancement.duree
         best_fourmi = self.liste_fourmis[0]
         for fourmi in self.liste_fourmis:
-            if fourmi.cmax < best:
-                best = fourmi.cmax
+            if fourmi.ordonnancement.duree < best:
+                best = fourmi.ordonnancement.duree
                 best_fourmi = fourmi
 
         if self.cbest < 0:
@@ -103,16 +103,16 @@ class Piste() :
         self.liste_fourmis.clear()
         self.liste_fourmis = [Fourmi(self.flowshop, self) for i in range(0, self.nombre_fourmis)]
 
-
     def set_elitiste(self, nombre : int):
 
         for i in range(nombre):
-            best = self.liste_fourmis[0].cmax
+            best = self.liste_fourmis[0].ordonnancement.duree
             best_fourmi = self.liste_fourmis[0]
 
             for j in range(len(self.liste_fourmis)):
-                if (self.liste_fourmis[j].cmax < best and not self.liste_fourmis[j].elitiste):
-                    best = self.liste_fourmis[j].cmax
+                if (self.liste_fourmis[j].ordonnancement.duree < best \
+                    and not self.liste_fourmis[j].elitiste):
+                    best = self.liste_fourmis[j].ordonnancement.duree
                     best_fourmi = self.liste_fourmis[j]
 			
             best_fourmi.elitiste = True
@@ -146,14 +146,11 @@ if __name__ == "__main__":
             piste.liste_fourmis[k].ajouter_job_visite(
                 random.choice
                 (piste.liste_fourmis[k].jobs_non_visites))
-        
 
         for k in range(len(piste.liste_fourmis)):
             for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
                 piste.liste_fourmis[k].set_job_suivant()	
         
-            piste.liste_fourmis[k].set_cmax()
-
         if piste.ELITISTE:
             piste.set_elitiste(piste.NOMBRE_ELITISTE)
         else:
@@ -165,7 +162,7 @@ if __name__ == "__main__":
         spentTime = time.time() - start_time
         index += 1
 
-        print("Indexation : {} - {} ".format(index, piste.cbest))
+        print("Itération : {} - {} ".format(index, piste.cbest))
 
         piste.solution_temp.afficher()
         print("Meilleur chemin : {}".format(piste.cbest))
