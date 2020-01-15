@@ -108,7 +108,6 @@ class Piste() :
             seuil = random.randint(0,100)
             if seuil < 20 :
                 ordo_actuel = self.liste_fourmis[i].ordonnancement
-                ordo_actuel.afficher()
                 self.liste_fourmis[i].ordonnancement=NEH.MethodeNEH(ordo_actuel)
 
     def set_elitiste(self, nombre : int):
@@ -162,7 +161,6 @@ if __name__ == "__main__":
             piste.liste_fourmis[k].set_cmax()
         
         piste.appliquer_NEH()
-        piste.maj_best_solution()
 
         if piste.ELITISTE:
             piste.set_elitiste(piste.NOMBRE_ELITISTE)
