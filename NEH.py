@@ -53,12 +53,8 @@ def MethodeNEH(ordo):
                     DureeMin = DureeTest
         """OrdoFinal= ordo le plus performant à cette étape"""
         OrdoFinal = CopyJobs(OrdoTestmin)
-<<<<<<< HEAD
 
     ordo.sequence = OrdoFinal
-=======
-    Flowshop.l_job = OrdoFinal
->>>>>>> 84ada8b34af67aff18f18c4a852e952829c8b6ab
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
     OrdonnancementComplet.afficher()
