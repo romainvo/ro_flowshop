@@ -34,7 +34,7 @@ class Piste() :
     COEF_ELITISTE = 10
     MAX_TIME = 60
     C_INI_PHEROMONE = 0.1
-    NOMBRE_FOURMIS = 101
+    NOMBRE_FOURMIS = 10
 
     def __init__(self, flowshop : Flowshop, nombre_fourmis=NOMBRE_FOURMIS):
         """ Initialise un objet Piste.
@@ -72,7 +72,7 @@ class Piste() :
                 for fourmi in self.liste_fourmis:
                     if fourmi.elitiste:
                         self.pheromone_sur_arc[i][j] \
-                            += fourmi.passage_sur_arc[i][j] * (self.COEF_ELITISTE / fourmi.cmax)
+                            += fourmi.passage_sur_arc[i][j] * self.COEF_ELITISTE * (self.Q/ fourmi.cmax)
                     else:
                         self.pheromone_sur_arc[i][j] \
                             += fourmi.passage_sur_arc[i][j] * (self.Q / fourmi.cmax)
@@ -153,14 +153,11 @@ if __name__ == "__main__":
                 piste.liste_fourmis[k].set_job_suivant()	
         
             piste.liste_fourmis[k].set_cmax()
-        
-
 
         if piste.ELITISTE:
             piste.set_elitiste(piste.NOMBRE_ELITISTE)
         else:
             piste.maj_best_solution()
-
 
         piste.maj_pheromone()
         piste.reset_fourmis()
@@ -171,6 +168,7 @@ if __name__ == "__main__":
         print("Indexation : {} - {} ".format(index, piste.cbest))
 
         piste.solution_temp.afficher()
+        print("Meilleur chemin : {}".format(piste.cbest))
 
         if spentTime > 60:
             print("Nombre d'itérations : {}".format(index))
