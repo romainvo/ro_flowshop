@@ -10,6 +10,7 @@ __date__ = 'Octobre 2019'
 import job
 import ordonnancement
 import NEH, deux_opt
+import time
 
 class Flowshop():
     """ Classe modélisant un problème de flowshop de permutation. 
@@ -63,18 +64,23 @@ class Flowshop():
         fdonnees.close()
 
 if __name__ == "__main__":
+
     prob = Flowshop()
     prob.definir_par("tai52.txt")
-    print("nb machine = ",prob.nombre_machines())
-    print("nb job = " ,prob.nombre_jobs())
-    ordo_NEH = NEH.MethodeNEH(prob)
-
-    prob.definir_par("jeu_donnees_1/tai51.txt")
     print("nb machine = ",prob.nb_machines)
     print("nb job = " ,prob.nb_jobs)
-    NEH.MethodeNEH(prob)
+    start_time = time.time()
+    ordo_NEH = NEH.MethodeNEH(prob)
+    print("Temps d'éxécution NEH : " + str((time.time()-start_time)))
 
-     # Test 2-opt
+   # prob.definir_par("jeu_donnees_1/tai51.txt")
+   # print("nb machine = ",prob.nb_machines)
+   # print("nb job = " ,prob.nb_jobs)
+    #NEH.MethodeNEH(prob)
+
+    # Test 2-opt
+    start_time = time.time()
     new_ordo = deux_opt.deux_opt(ordo_NEH)
-    print("\n Test de 2-opt : \n")
+    print("\n Test de 2-opt :")
     new_ordo.afficher()
+    print("Temps d'éxécution 2opt : " + str((time.time()-start_time)))
