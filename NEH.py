@@ -38,7 +38,7 @@ def MethodeNEH(ordo):
         for j in range(0,i+1):
             OrdoTest = CopyJobs(OrdoFinal)
             if j == 0:
-                """initialisation du premier test qui est au début considéré comme le minimum des tests"""
+                """initialisation du premier test qui est au début posé comme le minimum des tests pour cette étape"""
                 OrdoTestmin.insert(j, ListeJob[i])
                 Test=ordonnancement.Ordonnancement(NbMachine)
                 Test.ordonnancer_liste_job(OrdoTestmin)
@@ -52,10 +52,13 @@ def MethodeNEH(ordo):
                     OrdoTestmin = OrdoTest
                     DureeMin = DureeTest
         """OrdoFinal= ordo le plus performant à cette étape"""
-
         OrdoFinal = CopyJobs(OrdoTestmin)
+<<<<<<< HEAD
 
     ordo.sequence = OrdoFinal
+=======
+    Flowshop.l_job = OrdoFinal
+>>>>>>> 84ada8b34af67aff18f18c4a852e952829c8b6ab
     OrdonnancementComplet = (ordonnancement.Ordonnancement(NbMachine))
     OrdonnancementComplet.ordonnancer_liste_job(OrdoFinal)
     OrdonnancementComplet.afficher()

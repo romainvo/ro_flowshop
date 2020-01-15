@@ -47,6 +47,8 @@ class Fourmi():
         self.flowshop = flowshop
         self.ordonnancement = Ordonnancement(flowshop.nb_machines)
 
+        self.elitiste = False
+
         self.jobs_non_visites = flowshop.l_job.copy()
 
         self.passage_sur_arc = np.zeros((flowshop.nb_jobs, flowshop.nb_jobs), dtype=bool)
