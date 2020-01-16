@@ -26,17 +26,11 @@ class Fourmi():
     def __init__(self, flowshop : Flowshop, piste):
         """ Initialise un objet Fourmi.
         
-        Note: 
-            bla bla bla
-        
         Parameters:
             flowshop (Flowshop): Instance d'un problème de flowshop de permutation
 
             piste (Piste): Instance d'une piste, aggrège les principales caractéristiques
             de la piste parcourue par les fourmis.
-        
-        Keyword arguments:
-            bla bla bla
                         
         """
         
@@ -49,6 +43,10 @@ class Fourmi():
         self.jobs_non_visites = flowshop.l_job.copy()
 
         self.passage_sur_arc = np.zeros((flowshop.nb_jobs, flowshop.nb_jobs), dtype=bool)
+        
+        #On intialise la ville de départ de la fourmi (job)
+        self.ajouter_job_visite(random.choice
+                (self.jobs_non_visites))
 
     def ajouter_job_visite(self, job : Job):
         """ Ajoute à l'ordonnancement le job visité et supprime ce dernier de la liste
