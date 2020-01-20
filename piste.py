@@ -15,6 +15,10 @@ class Piste() :
 
         pheromone_sur_arc (numpy.array<float>): Stocke la quantité de phéromone présente
         sur chaque segment/arc de la piste.
+        
+        pheromone_closeness_products (numpy.array<float>): Stocke le produit de
+        la quantité de phéromone présente sur chaque segment et de l'inverse de 
+        la longueur de ce segment
 
         cbest (float): Plus courte distance totale parcourue par une des fourmis.
 
@@ -35,7 +39,7 @@ class Piste() :
     COEF_ELITISTE = 10
     MAX_TIME = 60
     C_INI_PHEROMONE = 1e-8
-    NOMBRE_FOURMIS = 100
+    NOMBRE_FOURMIS = 40
 
     def __init__(self, flowshop : Flowshop, nombre_fourmis=NOMBRE_FOURMIS):
         """ Initialise un objet Piste.
@@ -49,6 +53,7 @@ class Piste() :
 
         self.flowshop = flowshop
         self.pheromone_sur_arc = self.C_INI_PHEROMONE * np.ones((flowshop.nb_jobs, flowshop.nb_jobs))
+        self.pheromone_closeness_products = np.zeros((flowshop.nb_jobs, flowshop.nb_jobs))
         self.cbest = -1
         self.solution_temp = []
         self.nombre_fourmis = nombre_fourmis
@@ -80,9 +85,6 @@ class Piste() :
                                     key=lambda fourmi: fourmi.ordonnancement.duree,
                                     reverse=False)
         
-        for fourmi in self.liste_fourmis:
-            print(fourmi.ordonnancement.duree)
-        
         if self.cbest < 0:
             self.cbest = self.liste_fourmis[0].ordonnancement.duree
             self.solution_temp = self.liste_fourmis[0].ordonnancement
@@ -91,7 +93,7 @@ class Piste() :
             self.cbest = self.liste_fourmis[0].ordonnancement.duree
             self.solution_temp = self.liste_fourmis[0].ordonnancement           
         
-        for i in range(int(self.nombre_fourmis * self.TAUX_ELITISTE)):
+        for i in range(int(self.nombre_fourmis * taux)):
             self.liste_fourmis[i].elitiste = True
 
     def maj_pheromone(self):
@@ -139,7 +141,7 @@ class Piste() :
 if __name__ == "__main__":
     
     flowshop = Flowshop()
-    flowshop.definir_par("jeu_donnees_2/tai52.txt")
+    flowshop.definir_par("jeu_donnees_2/tai02.txt")
     print("nb machine = ", flowshop.nb_machines)
     print("nb job = " , flowshop.nb_jobs)
 
@@ -155,7 +157,7 @@ if __name__ == "__main__":
             for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
                 piste.liste_fourmis[k].set_job_suivant()	
         
-        #piste.appliquer_2_opt()
+        piste.appliquer_2_opt()
         #piste.appliquer_NEH()
 
         if piste.ELITISTE:
@@ -170,11 +172,11 @@ if __name__ == "__main__":
         index += 1
 
         print("Itération : {} - {} ".format(index, piste.cbest))
+        print(piste.pheromone_sur_arc)
         piste.solution_temp.afficher()
         print("Meilleur chemin : {}".format(piste.cbest))
-        print(piste.pheromone_sur_arc)
-
-        if spentTime > 60:
+    
+        if spentTime > 30:
             print("Nombre d'itérations : {}".format(index))
             break 
 
