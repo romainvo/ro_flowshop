@@ -185,11 +185,14 @@ if __name__ == "__main__":
                 piste.solution_temp.afficher()
                 print("Meilleur chemin : {}".format(piste.cbest))
             
-                if spentTime > 600:
+                if spentTime > 300:
                     print("Nombre d'itérations : {}".format(index))
                     break 
             
-            resultat_1.append(piste.solution_temp)
+            if folder == "jeu_donnees_1/":
+                resultat_1.append(piste.solution_temp)
+            else :
+                resultat_2.append(piste.solution_temp)
 
     with open('resultat_1.pickle', 'wb') as fileOut:
         pickle.dump(resultat_1, fileOut, protocol=pickle.HIGHEST_PROTOCOL)
