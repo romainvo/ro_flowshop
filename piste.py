@@ -6,6 +6,8 @@ import NEH, deux_opt
 import random
 import numpy as np
 import time
+import os 
+import pickle
 
 class Piste() :
     """ Classe modélisant une piste parcourue par des fourmis.
@@ -34,12 +36,12 @@ class Piste() :
     Q = 1
     P = 0.5
 
-    ELITISTE = False
-    TAUX_ELITISTE = 0.10
+    ELITISTE = True
+    TAUX_ELITISTE = 0.075
     COEF_ELITISTE = 10
     MAX_TIME = 60
     C_INI_PHEROMONE = 1e-8
-    NOMBRE_FOURMIS = 40
+    NOMBRE_FOURMIS = 50
 
     def __init__(self, flowshop : Flowshop, nombre_fourmis=NOMBRE_FOURMIS):
         """ Initialise un objet Piste.
@@ -132,7 +134,7 @@ class Piste() :
     def appliquer_2_opt(self):
         for i in range(self.nombre_fourmis) :
             seuil = random.randint(0,100)
-            if seuil < 10 :
+            if seuil < 5 :
                 ordo_actuel = self.liste_fourmis[i].ordonnancement
                 ordo_2_opt = deux_opt.deux_opt(ordo_actuel)
                 if ordo_2_opt.duree < ordo_actuel.duree :
@@ -140,43 +142,58 @@ class Piste() :
 
 if __name__ == "__main__":
     
-    flowshop = Flowshop()
-    flowshop.definir_par("jeu_donnees_2/tai02.txt")
-    print("nb machine = ", flowshop.nb_machines)
-    print("nb job = " , flowshop.nb_jobs)
-
-    piste = Piste(flowshop)
-
-    start_time = time.time()
-    spent_time = 0
-    index = 0
-		
-    while True: 
-
-        for k in range(len(piste.liste_fourmis)):
-            for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
-                piste.liste_fourmis[k].set_job_suivant()	
-        
-        piste.appliquer_2_opt()
-        #piste.appliquer_NEH()
-
-        if piste.ELITISTE:
-            piste.set_elitiste(piste.TAUX_ELITISTE)
-        else:
-            piste.maj_best_solution()
-
-        piste.maj_pheromone()
-        piste.reset_fourmis()
-
-        spentTime = time.time() - start_time
-        index += 1
-
-        print("Itération : {} - {} ".format(index, piste.cbest))
-        print(piste.pheromone_sur_arc)
-        piste.solution_temp.afficher()
-        print("Meilleur chemin : {}".format(piste.cbest))
+    resultat_1 = []
+    resultat_2 = []
     
-        if spentTime > 30:
-            print("Nombre d'itérations : {}".format(index))
-            break 
+    for folder in ["jeu_donnees_1/", "jeu_donnees_2/"]:
+        
+        for filename in os.listdir(folder):
+            
+            flowshop = Flowshop()
+            flowshop.definir_par(folder+filename)
+            print("nb machine = ", flowshop.nb_machines)
+            print("nb job = " , flowshop.nb_jobs)
+        
+            piste = Piste(flowshop)
+        
+            start_time = time.time()
+            spent_time = 0
+            index = 0
+        		
+            while True: 
+        
+                for k in range(len(piste.liste_fourmis)):
+                    for i in range(len(piste.liste_fourmis[k].jobs_non_visites)):
+                        piste.liste_fourmis[k].set_job_suivant()	
+                
+                piste.appliquer_2_opt()
+                #piste.appliquer_NEH()
+        
+                if piste.ELITISTE:
+                    piste.set_elitiste(piste.TAUX_ELITISTE)
+                else:
+                    piste.maj_best_solution()
+        
+                piste.maj_pheromone()
+                piste.reset_fourmis()
+        
+                spentTime = time.time() - start_time
+                index += 1
+        
+                print("Itération : {} - {} ".format(index, piste.cbest))
+                print(piste.pheromone_sur_arc)
+                piste.solution_temp.afficher()
+                print("Meilleur chemin : {}".format(piste.cbest))
+            
+                if spentTime > 600:
+                    print("Nombre d'itérations : {}".format(index))
+                    break 
+            
+            resultat_1.append(piste.solution_temp)
+
+    with open('resultat_1.pickle', 'wb') as fileOut:
+        pickle.dump(resultat_1, fileOut, protocol=pickle.HIGHEST_PROTOCOL)
+        
+    with open('resultat_2.pickle', 'wb') as fileOut:
+        pickle.dump(resultat_2, fileOut, protocol=pickle.HIGHEST_PROTOCOL)   
 
